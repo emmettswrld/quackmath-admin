@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quackmath | Admin Panel</title>
+    <link rel="icon" type="image/png" href="https://ik.imagekit.io/quackmath/goose%20(1).png">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap");
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Inter", sans-serif; }
+        
+        body { 
+            height: 100vh; background: #000; color: #fff; 
+            display: flex; flex-direction: column; align-items: center; 
+            overflow: hidden; -webkit-font-smoothing: antialiased;
+        }
+
+        /* Same exact background animation as main page */
+        body::before { 
+            content: ""; position: absolute; width: 120%; height: 120%; 
+            background: radial-gradient(circle at 20% 30%, rgba(0, 150, 255, 0.15), transparent 40%), 
+                        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08), transparent 45%); 
+            animation: floatBG 25s linear infinite; z-index: -1; 
+        }
+        @keyframes floatBG { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(-2%, -2%); } }
+
+        /* Banner Styles (for Preview) */
+        #bannerPreview {
+            width: 100%; background: rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 20px; display: flex; justify-content: center;
+            align-items: center; font-size: 0.85rem; color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px); margin-bottom: 2rem;
+        }
+        #bannerPreview.urgent { background: rgba(231, 76, 60, 0.9); color: white; }
+
+        .container { 
+            width: 100%; max-width: 500px; padding: 2rem; 
+            display: flex; flex-direction: column; align-items: center; gap: 1.5rem;
+            flex-grow: 1; justify-content: center;
+        }
+
+        .logo { width: 60px; filter: drop-shadow(0 0 12px rgba(255, 255, 255, 0.25)); }
+
+        h1 { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.02em; }
+
+        /* Admin Form Styling */
+        .admin-card {
+            width: 100%; background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem; border-radius: 24px; backdrop-filter: blur(15px);
+            display: flex; flex-direction: column; gap: 1.25rem;
+        }
+
+        .input-group { display: flex; flex-direction: column; gap: 8px; }
+        label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+
+        input, select {
+            width: 100%; padding: 0.85rem; border-radius: 12px; 
+            border: 1px solid rgba(255,255,255,0.1); background: rgba(255, 255, 255, 0.08); 
+            color: white; outline: none; font-size: 0.95rem;
+        }
+
+        .save-btn {
+            padding: 1rem; border-radius: 12px; border: none;
+            background: #2ecc71; color: #000; font-weight: 700;
+            cursor: pointer; transition: 0.2s ease; margin-top: 10px;
+        }
+        .save-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+
+        .doc-link {
+            text-decoration: none; color: #3498db; font-size: 0.8rem;
+            font-weight: 600; text-align: center; margin-top: 10px;
+        }
+
+        footer { padding: 20px; font-size: 0.85rem; color: rgba(255, 255, 255, 0.3); }
+    </style>
+</head>
+<body>
+
+    <div id="bannerPreview">
+        <span id="previewText">Preview: Welcome to Quackmath</span>
+    </div>
+
+    <div class="container">
+        <img src="https://ik.imagekit.io/quackmath/goose%20(1).png" class="logo">
+        <h1>Admin Control</h1>
+
+        <div class="admin-card">
+            <div class="input-group">
+                <label>Announcement Text</label>
+                <input type="text" id="annText" placeholder="Enter message..." oninput="updatePreview()">
+            </div>
+
+            <div class="input-group">
+                <label>Banner Theme</label>
+                <select id="annTheme" onchange="updatePreview()">
+                    <option value="NORMAL">Normal (Dark)</option>
+                    <option value="RED">Urgent (Red)</option>
+                </select>
+            </div>
+
+            <button class="save-btn" onclick="openDoc()">Update Google Doc</button>
+            <p style="font-size: 0.7rem; color: #888; text-align: center;">
+                Note: To update the site, click the button above and edit the text in the Google Doc manually.
+            </p>
+        </div>
+
+        <a href="https://docs.google.com/document/d/1vRlc8z-cCsvYVUOwERhDaP6aM22B_BvNlfQIBvH7rIcbKH-RzZq1eHmJhyv2woI9dxN7qoss4Svvf9c/edit" target="_blank" class="doc-link">
+            Open Raw Google Doc
+        </a>
+    </div>
+
+    <footer>Quackmath Security Protocol v1.0</footer>
+
+    <script>
+        const preview = document.getElementById('bannerPreview');
+        const previewText = document.getElementById('previewText');
+        const annText = document.getElementById('annText');
+        const annTheme = document.getElementById('annTheme');
+
+        function updatePreview() {
+            previewText.innerText = annText.value || "Preview: Welcome to Quackmath";
+            if (annTheme.value === "RED") {
+                preview.classList.add('urgent');
+            } else {
+                preview.classList.remove('urgent');
+            }
+        }
+
+        function openDoc() {
+            // Redirects to the edit version of your doc
+            window.open('https://docs.google.com/document/d/1vRlc8z-cCsvYVUOwERhDaP6aM22B_BvNlfQIBvH7rIcbKH-RzZq1eHmJhyv2woI9dxN7qoss4Svvf9c/edit', '_blank');
+        }
+    </script>
+</body>
+</html>
